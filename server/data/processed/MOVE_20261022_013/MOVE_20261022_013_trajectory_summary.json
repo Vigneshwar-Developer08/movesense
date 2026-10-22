@@ -1,0 +1,203 @@
+{
+  "session_id": "MOVE_20261022_013",
+  "state": "LOCKED",
+  "point_a_cm": [
+    0.0,
+    20.0,
+    40.0
+  ],
+  "point_b_cm": [
+    16726.042898656113,
+    27485.643020710213,
+    8556.085783290317
+  ],
+  "estimated_point_b_cm": [
+    16726.042898656113,
+    27485.643020710213,
+    8556.085783290317
+  ],
+  "endpoint_error_m": null,
+  "endpoint_error_cm": null,
+  "straight_line_distance_cm": 33266.28585606051,
+  "distance_source": "IMU-only inertial estimate; subject to drift",
+  "horizontal_distance_cm": 32157.768230845442,
+  "trajectory_length_cm": 33477.3224869945,
+  "horizontal_path_length_cm": 32227.80705979882,
+  "displacement_x_cm": 16726.042898656113,
+  "displacement_y_cm": 27465.643020710213,
+  "vertical_displacement_cm": 8516.085783290317,
+  "peak_height_cm": 8516.085783290317,
+  "movement_duration_s": 27.331461538461504,
+  "mean_speed_mps": 12.248639700399623,
+  "max_speed_mps": 22.263293319133968,
+  "max_acceleration_mps2": 34.67400227741048,
+  "efficiency": 0.9936961317316828,
+  "final_velocity_drift_mps": 81.00103585281258,
+  "closure_error_mps": 81.00103585281258,
+  "final_velocity_drift_explanation": "Final velocity drift is the raw end velocity before endpoint drift correction.",
+  "flight_time_s": 0.11446153846150264,
+  "flight_height_cm": 1.6060159214191132,
+  "motion": "throw",
+  "n_bounces": 131,
+  "n_flights": 1,
+  "motion_explanation": "move = generic A-to-B; throw = flight or fast+hard; dribble = repeated impacts",
+  "quality_status": "ERROR",
+  "quality_flags": [
+    "too_long_for_integration",
+    "large_closure_error",
+    "height_inconsistent_with_flight"
+  ],
+  "sensor_orientation": "Arbitrary / calibrated",
+  "gravity_magnitude_mps2": 9.689592211585278,
+  "gravity_direction_sensor": [
+    0.0345804284166284,
+    -0.021270034744985927,
+    -0.9991755499372817
+  ],
+  "gravity_compensation_status": "OK",
+  "mean_stationary_linear_acc_mps2": [
+    2.375877272697835e-14,
+    -1.4627188349436437e-14,
+    -5.092842289577959e-05
+  ],
+  "mean_stationary_linear_acc_norm_mps2": 5.092842289577959e-05,
+  "reference_distance_cm": null,
+  "distance_error_cm": null,
+  "distance_error_percent": null,
+  "reference_path_cm": null,
+  "path_error_cm": null,
+  "path_error_percent": null,
+  "validation_status": "NO_REFERENCE",
+  "baseline": {
+    "acc_mean_mps2": [
+      0.3350684887323624,
+      -0.20609687975583932,
+      -9.681552740243765
+    ],
+    "gyro_bias_dps": [
+      1.43500000391251,
+      -2.5182051414098496,
+      0.21089744023405588
+    ],
+    "gravity_mps2": 9.689592211585278,
+    "gravity_deviation_mps2": -0.11705778841472103,
+    "gravity_direction_sensor": [
+      0.0345804284166284,
+      -0.021270034744985927,
+      -0.9991755499372817
+    ],
+    "acc_std_mps2": 0.021916243858494017,
+    "gyro_std_dps": 0.27098540531685467
+  },
+  "parameters": {
+    "calib_window_s": 1.5,
+    "calib_max_acc_std_mps2": 0.15,
+    "calib_max_gyro_std_dps": 1.0,
+    "calib_max_gyro_bias_dps": 10.0,
+    "calib_gravity_tol_mps2": 0.5,
+    "gravity_comp_mean_tol_mps2": 0.25,
+    "lowpass_cutoff_hz": 15.0,
+    "filter_order": 4,
+    "madgwick_beta": 0.02,
+    "acc_gate_mps2": 1.5,
+    "rest_acc_tol_mps2": 0.6,
+    "rest_gyro_dps": 20.0,
+    "rest_window_s": 0.3,
+    "min_motion_s": 0.2,
+    "max_motion_s": 8.0,
+    "flight_acc_max_mps2": 4.0,
+    "flight_min_s": 0.08,
+    "flight_merge_gap_s": 0.04,
+    "max_plausible_speed_mps": 25.0,
+    "max_closure_error_mps": 0.5,
+    "height_mismatch_tol_m": 1.0,
+    "max_gap_factor": 1.5,
+    "throw_min_peak_speed_mps": 4.0,
+    "throw_min_acc_mps2": 8.0,
+    "bounce_min_linear_acc_mps2": 2.5,
+    "bounce_min_gap_s": 0.15,
+    "dribble_min_bounces": 3,
+    "dribble_max_interval_s": 1.2,
+    "trig_start_acc_mps2": 1.0,
+    "trig_start_gyro_dps": 30.0,
+    "trig_start_confirm_s": 0.06,
+    "trig_stop_confirm_s": 0.5,
+    "trig_stop_acc_std_mps2": 0.25,
+    "trig_stop_gyro_dps": 15.0,
+    "trig_edge_acc_mps2": 0.3,
+    "trig_edge_gyro_dps": 5.0,
+    "trig_min_movement_s": 0.3,
+    "trig_min_session_s": 0.6,
+    "trig_max_session_s": null,
+    "align_x_to_b": false
+  },
+  "processing_version": "0.2.0",
+  "mode": "live-frontend",
+  "sample_rate_hz": 52.0,
+  "viewer": "api/tracking",
+  "source_session_id": "TRK_20261022_113841",
+  "raw_files": {
+    "csv": "data/raw/TRK_20261022_113841.csv",
+    "json": "data/raw/TRK_20261022_113841.json",
+    "bin": "data/raw/TRK_20261022_113841.bin"
+  },
+  "events": [
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 541785.4615384615,
+      "message": "baseline locked: g=9.943 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 545863.0,
+      "message": "START trigger confirmed: Point A at t=545692 ms"
+    },
+    {
+      "t_ms": 548875.4615384615,
+      "message": "STOP trigger confirmed: Point B at t=548399 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_012, motion=dribble, estimated A->B = 88.9 cm, path = 219.1 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    },
+    {
+      "t_ms": null,
+      "message": "reset: IDLE (completed sessions kept)"
+    },
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 558843.2307692308,
+      "message": "baseline locked: g=9.690 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 564465.0,
+      "message": "START trigger confirmed: Point A at t=564104 ms"
+    },
+    {
+      "t_ms": 591435.6923076923,
+      "message": "STOP trigger confirmed: Point B at t=591436 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_013, motion=throw, estimated A->B = 33266.3 cm, path = 33477.3 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    }
+  ],
+  "analysed_for": {
+    "id": "usr_46bbe8c3fb8d",
+    "name": "nandha",
+    "email": "nandha@gmail.com"
+  }
+}

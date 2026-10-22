@@ -1,0 +1,427 @@
+[
+  {
+    "session_id": "TRK_20261022_092803",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T03:58:03.133162+00:00",
+    "finished_at": "2026-10-22T03:58:55.806581+00:00",
+    "status": "Disconnected",
+    "sample_count": 2292,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_092803.csv",
+      "json": "data/raw/TRK_20261022_092803.json",
+      "bin": "data/raw/TRK_20261022_092803.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_001",
+        "trajectory_csv": "data/processed/MOVE_20261022_001/MOVE_20261022_001_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_001/MOVE_20261022_001_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_092859",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T03:58:59.960158+00:00",
+    "finished_at": "2026-10-22T03:59:50.834169+00:00",
+    "status": "Disconnected",
+    "sample_count": 2420,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_092859.csv",
+      "json": "data/raw/TRK_20261022_092859.json",
+      "bin": "data/raw/TRK_20261022_092859.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_002",
+        "trajectory_csv": "data/processed/MOVE_20261022_002/MOVE_20261022_002_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_002/MOVE_20261022_002_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_003",
+        "trajectory_csv": "data/processed/MOVE_20261022_003/MOVE_20261022_003_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_003/MOVE_20261022_003_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_093035",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T04:00:35.633740+00:00",
+    "finished_at": "2026-10-22T04:03:26.951217+00:00",
+    "status": "Disconnected",
+    "sample_count": 8160,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_093035.csv",
+      "json": "data/raw/TRK_20261022_093035.json",
+      "bin": "data/raw/TRK_20261022_093035.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_004",
+        "trajectory_csv": "data/processed/MOVE_20261022_004/MOVE_20261022_004_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_004/MOVE_20261022_004_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_005",
+        "trajectory_csv": "data/processed/MOVE_20261022_005/MOVE_20261022_005_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_005/MOVE_20261022_005_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_006",
+        "trajectory_csv": "data/processed/MOVE_20261022_006/MOVE_20261022_006_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_006/MOVE_20261022_006_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_095720",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T04:27:20.650313+00:00",
+    "finished_at": "2026-10-22T04:31:22.067722+00:00",
+    "status": "Disconnected",
+    "sample_count": 12280,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_095720.csv",
+      "json": "data/raw/TRK_20261022_095720.json",
+      "bin": "data/raw/TRK_20261022_095720.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_007",
+        "trajectory_csv": "data/processed/MOVE_20261022_007/MOVE_20261022_007_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_007/MOVE_20261022_007_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_008",
+        "trajectory_csv": "data/processed/MOVE_20261022_008/MOVE_20261022_008_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_008/MOVE_20261022_008_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_009",
+        "trajectory_csv": "data/processed/MOVE_20261022_009/MOVE_20261022_009_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_009/MOVE_20261022_009_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_010",
+        "trajectory_csv": "data/processed/MOVE_20261022_010/MOVE_20261022_010_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_010/MOVE_20261022_010_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_111705",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T05:47:05.899933+00:00",
+    "finished_at": "2026-10-22T05:47:58.713776+00:00",
+    "status": "Disconnected",
+    "sample_count": 2376,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_111705.csv",
+      "json": "data/raw/TRK_20261022_111705.json",
+      "bin": "data/raw/TRK_20261022_111705.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_011",
+        "trajectory_csv": "data/processed/MOVE_20261022_011/MOVE_20261022_011_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_011/MOVE_20261022_011_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_113841",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:08:41.034725+00:00",
+    "finished_at": "2026-10-22T06:16:52.981259+00:00",
+    "status": "Disconnected",
+    "sample_count": 25020,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_113841.csv",
+      "json": "data/raw/TRK_20261022_113841.json",
+      "bin": "data/raw/TRK_20261022_113841.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_012",
+        "trajectory_csv": "data/processed/MOVE_20261022_012/MOVE_20261022_012_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_012/MOVE_20261022_012_trajectory_summary.json"
+      },
+      {
+        "session_id": "MOVE_20261022_013",
+        "trajectory_csv": "data/processed/MOVE_20261022_013/MOVE_20261022_013_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_013/MOVE_20261022_013_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_114919",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:19:19.528304+00:00",
+    "finished_at": "2026-10-22T06:19:46.664012+00:00",
+    "status": "Disconnected",
+    "sample_count": 1028,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_114919.csv",
+      "json": "data/raw/TRK_20261022_114919.json",
+      "bin": "data/raw/TRK_20261022_114919.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_014",
+        "trajectory_csv": "data/processed/MOVE_20261022_014/MOVE_20261022_014_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_014/MOVE_20261022_014_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_115440",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:24:40.230019+00:00",
+    "finished_at": "2026-10-22T06:25:01.654650+00:00",
+    "status": "Disconnected",
+    "sample_count": 688,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_115440.csv",
+      "json": "data/raw/TRK_20261022_115440.json",
+      "bin": "data/raw/TRK_20261022_115440.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_015",
+        "trajectory_csv": "data/processed/MOVE_20261022_015/MOVE_20261022_015_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_015/MOVE_20261022_015_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_115550",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:25:50.600678+00:00",
+    "finished_at": "2026-10-22T06:26:04.660111+00:00",
+    "status": "Disconnected",
+    "sample_count": 464,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_115550.csv",
+      "json": "data/raw/TRK_20261022_115550.json",
+      "bin": "data/raw/TRK_20261022_115550.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_120225",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:32:25.330915+00:00",
+    "finished_at": "2026-10-22T06:32:57.688412+00:00",
+    "status": "Disconnected",
+    "sample_count": 1364,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_120225.csv",
+      "json": "data/raw/TRK_20261022_120225.json",
+      "bin": "data/raw/TRK_20261022_120225.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_120319",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:33:19.590880+00:00",
+    "finished_at": "2026-10-22T06:33:27.662570+00:00",
+    "status": "Disconnected",
+    "sample_count": 176,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_120319.csv",
+      "json": "data/raw/TRK_20261022_120319.json",
+      "bin": "data/raw/TRK_20261022_120319.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_120719",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:37:19.712620+00:00",
+    "finished_at": "2026-10-22T06:37:29.637402+00:00",
+    "status": "Disconnected",
+    "sample_count": 144,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_120719.csv",
+      "json": "data/raw/TRK_20261022_120719.json",
+      "bin": "data/raw/TRK_20261022_120719.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_120818",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:38:18.704339+00:00",
+    "finished_at": "2026-10-22T06:38:27.659860+00:00",
+    "status": "Disconnected",
+    "sample_count": 232,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_120818.csv",
+      "json": "data/raw/TRK_20261022_120818.json",
+      "bin": "data/raw/TRK_20261022_120818.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_120939",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:39:39.531466+00:00",
+    "finished_at": "2026-10-22T06:39:50.646668+00:00",
+    "status": "Disconnected",
+    "sample_count": 144,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_120939.csv",
+      "json": "data/raw/TRK_20261022_120939.json",
+      "bin": "data/raw/TRK_20261022_120939.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_122241",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:52:41.503140+00:00",
+    "finished_at": "2026-10-22T06:52:59.669978+00:00",
+    "status": "Disconnected",
+    "sample_count": 532,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_122241.csv",
+      "json": "data/raw/TRK_20261022_122241.json",
+      "bin": "data/raw/TRK_20261022_122241.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_016",
+        "trajectory_csv": "data/processed/MOVE_20261022_016/MOVE_20261022_016_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_016/MOVE_20261022_016_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_122347",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:53:47.318302+00:00",
+    "finished_at": "2026-10-22T06:53:56.669084+00:00",
+    "status": "Disconnected",
+    "sample_count": 144,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_122347.csv",
+      "json": "data/raw/TRK_20261022_122347.json",
+      "bin": "data/raw/TRK_20261022_122347.bin"
+    },
+    "processed": [],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_122946",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T06:59:46.722823+00:00",
+    "finished_at": "2026-10-22T07:00:06.695141+00:00",
+    "status": "Disconnected",
+    "sample_count": 620,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_122946.csv",
+      "json": "data/raw/TRK_20261022_122946.json",
+      "bin": "data/raw/TRK_20261022_122946.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_017",
+        "trajectory_csv": "data/processed/MOVE_20261022_017/MOVE_20261022_017_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_017/MOVE_20261022_017_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  },
+  {
+    "session_id": "TRK_20261022_123512",
+    "address": "74:92:BA:10:E2:C1",
+    "device": "Movesense",
+    "rate_hz": 52,
+    "continuous": false,
+    "started_at": "2026-10-22T07:05:12.422224+00:00",
+    "finished_at": "2026-10-22T07:06:17.749367+00:00",
+    "status": "Disconnected",
+    "sample_count": 3088,
+    "raw": {
+      "csv": "data/raw/TRK_20261022_123512.csv",
+      "json": "data/raw/TRK_20261022_123512.json",
+      "bin": "data/raw/TRK_20261022_123512.bin"
+    },
+    "processed": [
+      {
+        "session_id": "MOVE_20261022_018",
+        "trajectory_csv": "data/processed/MOVE_20261022_018/MOVE_20261022_018_trajectory.csv",
+        "summary_json": "data/processed/MOVE_20261022_018/MOVE_20261022_018_trajectory_summary.json"
+      }
+    ],
+    "error": null
+  }
+]

@@ -1,0 +1,196 @@
+{
+  "session_id": "MOVE_20261022_003",
+  "state": "LOCKED",
+  "point_a_cm": [
+    0.0,
+    20.0,
+    40.0
+  ],
+  "point_b_cm": [
+    15.97543006547302,
+    -35.34069851231273,
+    21.85593603765208
+  ],
+  "estimated_point_b_cm": [
+    15.97543006547302,
+    -35.34069851231273,
+    21.85593603765208
+  ],
+  "endpoint_error_m": null,
+  "endpoint_error_cm": null,
+  "straight_line_distance_cm": 60.39051527083772,
+  "distance_source": "IMU-only inertial estimate; subject to drift",
+  "horizontal_distance_cm": 57.60041039443653,
+  "trajectory_length_cm": 369.30856093825014,
+  "horizontal_path_length_cm": 264.2997401830624,
+  "displacement_x_cm": 15.97543006547302,
+  "displacement_y_cm": -55.34069851231273,
+  "vertical_displacement_cm": -18.14406396234792,
+  "peak_height_cm": 81.02279557562497,
+  "movement_duration_s": 3.4492307693958284,
+  "mean_speed_mps": 1.0706983255948939,
+  "max_speed_mps": 3.243197837248735,
+  "max_acceleration_mps2": 20.091221679398085,
+  "efficiency": 0.16352319349817415,
+  "final_velocity_drift_mps": 1.0686901240706588,
+  "closure_error_mps": 1.0686901240706588,
+  "final_velocity_drift_explanation": "Final velocity drift is the raw end velocity before endpoint drift correction.",
+  "flight_time_s": null,
+  "flight_height_cm": null,
+  "motion": "dribble",
+  "n_bounces": 9,
+  "n_flights": 0,
+  "motion_explanation": "move = generic A-to-B; throw = flight or fast+hard; dribble = repeated impacts",
+  "quality_status": "WARNING",
+  "quality_flags": [
+    "large_closure_error"
+  ],
+  "sensor_orientation": "Arbitrary / calibrated",
+  "gravity_magnitude_mps2": 9.943443206658024,
+  "gravity_direction_sensor": [
+    0.1737921253045519,
+    -0.15198480411669854,
+    0.9729835129639843
+  ],
+  "gravity_compensation_status": "OK",
+  "mean_stationary_linear_acc_mps2": [
+    2.0469737016526324e-16,
+    -2.220446049250313e-16,
+    -0.0002551300121975686
+  ],
+  "mean_stationary_linear_acc_norm_mps2": 0.0002551300121975686,
+  "reference_distance_cm": null,
+  "distance_error_cm": null,
+  "distance_error_percent": null,
+  "reference_path_cm": null,
+  "path_error_cm": null,
+  "path_error_percent": null,
+  "validation_status": "NO_REFERENCE",
+  "baseline": {
+    "acc_mean_mps2": [
+      1.728047788143158,
+      -1.5112134921245086,
+      9.674558064876459
+    ],
+    "gyro_bias_dps": [
+      1.3317948795664005,
+      -2.0712820649720154,
+      -0.15974358975505218
+    ],
+    "gravity_mps2": 9.943443206658024,
+    "gravity_deviation_mps2": 0.13679320665802486,
+    "gravity_direction_sensor": [
+      0.1737921253045519,
+      -0.15198480411669854,
+      0.9729835129639843
+    ],
+    "acc_std_mps2": 0.05071480676889172,
+    "gyro_std_dps": 0.9697499349476181
+  },
+  "parameters": {
+    "calib_window_s": 1.5,
+    "calib_max_acc_std_mps2": 0.15,
+    "calib_max_gyro_std_dps": 1.0,
+    "calib_max_gyro_bias_dps": 10.0,
+    "calib_gravity_tol_mps2": 0.5,
+    "gravity_comp_mean_tol_mps2": 0.25,
+    "lowpass_cutoff_hz": 15.0,
+    "filter_order": 4,
+    "madgwick_beta": 0.02,
+    "acc_gate_mps2": 1.5,
+    "rest_acc_tol_mps2": 0.6,
+    "rest_gyro_dps": 20.0,
+    "rest_window_s": 0.3,
+    "min_motion_s": 0.2,
+    "max_motion_s": 8.0,
+    "flight_acc_max_mps2": 4.0,
+    "flight_min_s": 0.08,
+    "flight_merge_gap_s": 0.04,
+    "max_plausible_speed_mps": 25.0,
+    "max_closure_error_mps": 0.5,
+    "height_mismatch_tol_m": 1.0,
+    "max_gap_factor": 1.5,
+    "throw_min_peak_speed_mps": 4.0,
+    "throw_min_acc_mps2": 8.0,
+    "bounce_min_linear_acc_mps2": 2.5,
+    "bounce_min_gap_s": 0.15,
+    "dribble_min_bounces": 3,
+    "dribble_max_interval_s": 1.2,
+    "trig_start_acc_mps2": 1.0,
+    "trig_start_gyro_dps": 30.0,
+    "trig_start_confirm_s": 0.06,
+    "trig_stop_confirm_s": 0.5,
+    "trig_stop_acc_std_mps2": 0.25,
+    "trig_stop_gyro_dps": 15.0,
+    "trig_edge_acc_mps2": 0.3,
+    "trig_edge_gyro_dps": 5.0,
+    "trig_min_movement_s": 0.3,
+    "trig_min_session_s": 0.6,
+    "trig_max_session_s": null,
+    "align_x_to_b": false
+  },
+  "processing_version": "0.2.0",
+  "mode": "live-frontend",
+  "sample_rate_hz": 52.0,
+  "viewer": "api/tracking",
+  "source_session_id": "TRK_20261022_092859",
+  "raw_files": {
+    "csv": "data/raw/TRK_20261022_092859.csv",
+    "json": "data/raw/TRK_20261022_092859.json",
+    "bin": "data/raw/TRK_20261022_092859.bin"
+  },
+  "events": [
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 1193744821.2307692,
+      "message": "baseline locked: g=9.987 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 1193746574.2307692,
+      "message": "START trigger confirmed: Point A at t=1193746098 ms"
+    },
+    {
+      "t_ms": 1193750234.2307692,
+      "message": "STOP trigger confirmed: Point B at t=1193750234 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_002, motion=throw, estimated A->B = 333.8 cm, path = 526.2 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    },
+    {
+      "t_ms": null,
+      "message": "reset: IDLE (completed sessions kept)"
+    },
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 1193771924.6923077,
+      "message": "baseline locked: g=9.943 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 1193773525.6923077,
+      "message": "START trigger confirmed: Point A at t=1193773183 ms"
+    },
+    {
+      "t_ms": 1193776632.4615386,
+      "message": "STOP trigger confirmed: Point B at t=1193776632 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_003, motion=dribble, estimated A->B = 60.4 cm, path = 369.3 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    }
+  ]
+}

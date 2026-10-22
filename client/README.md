@@ -1,0 +1,1 @@
+[https://www.movesense.com/resources/](https://www.movesense.com/resources/) , [https://www.youtube.com/watch?v=GGMXJ8FWMSw](https://www.youtube.com/watch?v=GGMXJ8FWMSw)  - how to make a firmware customisation according to our use case, give me step by step customise it

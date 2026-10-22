@@ -1,0 +1,201 @@
+{
+  "session_id": "MOVE_20261022_012",
+  "state": "LOCKED",
+  "point_a_cm": [
+    0.0,
+    20.0,
+    40.0
+  ],
+  "point_b_cm": [
+    27.761951796723984,
+    12.600406352840928,
+    124.15172700325205
+  ],
+  "estimated_point_b_cm": [
+    27.761951796723984,
+    12.600406352840928,
+    124.15172700325205
+  ],
+  "endpoint_error_m": null,
+  "endpoint_error_cm": null,
+  "straight_line_distance_cm": 88.92127479594836,
+  "distance_source": "IMU-only inertial estimate; subject to drift",
+  "horizontal_distance_cm": 28.731166939522367,
+  "trajectory_length_cm": 219.1206888347288,
+  "horizontal_path_length_cm": 102.79898902008186,
+  "displacement_x_cm": 27.761951796723984,
+  "displacement_y_cm": -7.399593647159072,
+  "vertical_displacement_cm": 84.15172700325205,
+  "peak_height_cm": 117.72340908603496,
+  "movement_duration_s": 2.707538461538497,
+  "mean_speed_mps": 0.80929852686273,
+  "max_speed_mps": 1.6015761353602878,
+  "max_acceleration_mps2": 9.497941210268873,
+  "efficiency": 0.4058095804135455,
+  "final_velocity_drift_mps": 0.8118460585985928,
+  "closure_error_mps": 0.8118460585985928,
+  "final_velocity_drift_explanation": "Final velocity drift is the raw end velocity before endpoint drift correction.",
+  "flight_time_s": null,
+  "flight_height_cm": null,
+  "motion": "dribble",
+  "n_bounces": 12,
+  "n_flights": 0,
+  "motion_explanation": "move = generic A-to-B; throw = flight or fast+hard; dribble = repeated impacts",
+  "quality_status": "WARNING",
+  "quality_flags": [
+    "large_closure_error"
+  ],
+  "sensor_orientation": "Arbitrary / calibrated",
+  "gravity_magnitude_mps2": 9.94349490973013,
+  "gravity_direction_sensor": [
+    -0.006833898377316606,
+    -0.2176172388027094,
+    0.9760102638849928
+  ],
+  "gravity_compensation_status": "OK",
+  "mean_stationary_linear_acc_mps2": [
+    -5.854691731421724e-18,
+    -4.440892098500626e-16,
+    -5.5464878121469496e-05
+  ],
+  "mean_stationary_linear_acc_norm_mps2": 5.5464878121469496e-05,
+  "reference_distance_cm": null,
+  "distance_error_cm": null,
+  "distance_error_percent": null,
+  "reference_path_cm": null,
+  "path_error_cm": null,
+  "path_error_percent": null,
+  "validation_status": "NO_REFERENCE",
+  "baseline": {
+    "acc_mean_mps2": [
+      -0.06795245468712006,
+      -2.1638638361906395,
+      9.704898956494453
+    ],
+    "gyro_bias_dps": [
+      1.4493589798609416,
+      -2.4966666729022293,
+      0.19205128678526634
+    ],
+    "gravity_mps2": 9.94349490973013,
+    "gravity_deviation_mps2": 0.1368449097301312,
+    "gravity_direction_sensor": [
+      -0.006833898377316606,
+      -0.2176172388027094,
+      0.9760102638849928
+    ],
+    "acc_std_mps2": 0.026906799079914313,
+    "gyro_std_dps": 0.06994170159297876
+  },
+  "parameters": {
+    "calib_window_s": 1.5,
+    "calib_max_acc_std_mps2": 0.15,
+    "calib_max_gyro_std_dps": 1.0,
+    "calib_max_gyro_bias_dps": 10.0,
+    "calib_gravity_tol_mps2": 0.5,
+    "gravity_comp_mean_tol_mps2": 0.25,
+    "lowpass_cutoff_hz": 15.0,
+    "filter_order": 4,
+    "madgwick_beta": 0.02,
+    "acc_gate_mps2": 1.5,
+    "rest_acc_tol_mps2": 0.6,
+    "rest_gyro_dps": 20.0,
+    "rest_window_s": 0.3,
+    "min_motion_s": 0.2,
+    "max_motion_s": 8.0,
+    "flight_acc_max_mps2": 4.0,
+    "flight_min_s": 0.08,
+    "flight_merge_gap_s": 0.04,
+    "max_plausible_speed_mps": 25.0,
+    "max_closure_error_mps": 0.5,
+    "height_mismatch_tol_m": 1.0,
+    "max_gap_factor": 1.5,
+    "throw_min_peak_speed_mps": 4.0,
+    "throw_min_acc_mps2": 8.0,
+    "bounce_min_linear_acc_mps2": 2.5,
+    "bounce_min_gap_s": 0.15,
+    "dribble_min_bounces": 3,
+    "dribble_max_interval_s": 1.2,
+    "trig_start_acc_mps2": 1.0,
+    "trig_start_gyro_dps": 30.0,
+    "trig_start_confirm_s": 0.06,
+    "trig_stop_confirm_s": 0.5,
+    "trig_stop_acc_std_mps2": 0.25,
+    "trig_stop_gyro_dps": 15.0,
+    "trig_edge_acc_mps2": 0.3,
+    "trig_edge_gyro_dps": 5.0,
+    "trig_min_movement_s": 0.3,
+    "trig_min_session_s": 0.6,
+    "trig_max_session_s": null,
+    "align_x_to_b": false
+  },
+  "processing_version": "0.2.0",
+  "mode": "live-frontend",
+  "sample_rate_hz": 52.0,
+  "viewer": "api/tracking",
+  "source_session_id": "TRK_20261022_113841",
+  "raw_files": {
+    "csv": "data/raw/TRK_20261022_113841.csv",
+    "json": "data/raw/TRK_20261022_113841.json",
+    "bin": "data/raw/TRK_20261022_113841.bin"
+  },
+  "events": [
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 541785.4615384615,
+      "message": "baseline locked: g=9.943 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 545863.0,
+      "message": "START trigger confirmed: Point A at t=545692 ms"
+    },
+    {
+      "t_ms": 548875.4615384615,
+      "message": "STOP trigger confirmed: Point B at t=548399 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_012, motion=dribble, estimated A->B = 88.9 cm, path = 219.1 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    },
+    {
+      "t_ms": null,
+      "message": "reset: IDLE (completed sessions kept)"
+    },
+    {
+      "t_ms": null,
+      "message": "WAITING: keep still for baseline; the first movement starts Point A"
+    },
+    {
+      "t_ms": 558843.2307692308,
+      "message": "baseline locked: g=9.690 m/s^2; waiting for motion"
+    },
+    {
+      "t_ms": 564465.0,
+      "message": "START trigger confirmed: Point A at t=564104 ms"
+    },
+    {
+      "t_ms": 591435.6923076923,
+      "message": "STOP trigger confirmed: Point B at t=591436 ms"
+    },
+    {
+      "t_ms": null,
+      "message": "COMPLETE: MOVE_20261022_013, motion=throw, estimated A->B = 33266.3 cm, path = 33477.3 cm"
+    },
+    {
+      "t_ms": null,
+      "message": "LOCKED: session frozen; press NEW to detect another movement"
+    }
+  ],
+  "analysed_for": {
+    "id": "usr_46bbe8c3fb8d",
+    "name": "nandha",
+    "email": "nandha@gmail.com"
+  }
+}

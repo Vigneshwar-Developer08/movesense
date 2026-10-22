@@ -1,0 +1,19 @@
+[
+  {
+    "address": "74:92:BA:10:E2:C1",
+    "name": "Movesense",
+    "serial": "242930001387",
+    "model": null,
+    "firmware": null,
+    "manufacturer": "Suunto",
+    "rssi": null,
+    "connected_at": "2026-10-22T06:17:32.621238+00:00",
+    "has_gsp": true,
+    "has_hr": false,
+    "gsp_hello": {
+      "message": "Hello",
+      "legacy_firmware": "true"
+    },
+    "status": "connected"
+  }
+]

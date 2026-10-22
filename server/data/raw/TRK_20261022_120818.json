@@ -1,0 +1,29 @@
+{
+  "session_id": "TRK_20261022_120818",
+  "date_time": "2026-10-22T12:08:18",
+  "sensor_model": null,
+  "sensor_serial": null,
+  "firmware": null,
+  "hello_raw_hex": "010148656c6c6f",
+  "ble_address": "74:92:BA:10:E2:C1",
+  "stream_path": "/Meas/IMU9/52",
+  "sample_rate_hz": 52,
+  "sensor_placement": "unspecified",
+  "experiment_type": "frontend live tracking",
+  "units": {
+    "time": "ms",
+    "acc": "m/s^2",
+    "gyro": "deg/s",
+    "magn": "uT",
+    "heart_rate": "bpm"
+  },
+  "heart_rate": "unavailable (not part of the IMU9 stream)",
+  "samples": 232,
+  "packets": 58,
+  "malformed_packets": 0,
+  "missing_samples_detected": 0,
+  "connection_events": [
+    "2026-10-22T12:08:20 connected"
+  ],
+  "processing_version": "0.2.0"
+}

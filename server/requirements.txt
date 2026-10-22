@@ -1,0 +1,9 @@
+bleak
+numpy
+pandas
+scipy
+matplotlib
+pytest
+fastapi
+uvicorn[standard]
+pydantic

@@ -1,0 +1,3 @@
+# Local account state: password hashes and session digests must not be committed.
+data/local/users.json
+data/local/sessions.json
