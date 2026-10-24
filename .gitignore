@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+client/.next/
+client/out/
+.vercel/
+
+# Local environment (never commit secrets)
+.env
+.env.local
+.env*.local
+!.env.local.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db

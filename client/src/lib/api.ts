@@ -1,5 +1,17 @@
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+/**
+ * Base URL for the backend API.
+ *
+ * When the app is deployed as a single Vercel project, the FastAPI service is
+ * reachable on the same origin under `/api`, so the default (empty) base keeps
+ * every request same-origin. Set `NEXT_PUBLIC_API_URL` only when the Next.js
+ * frontend runs separately from the API (for example `next dev` on :3000 and
+ * `uvicorn` on :8000).
+ */
+const configuredBase = process.env.NEXT_PUBLIC_API_URL?.trim();
+
+export const API_BASE = configuredBase
+  ? configuredBase.replace(/\/+$/, "")
+  : "";
 
 export type ArtifactFormat = "csv" | "json" | "mat";
 

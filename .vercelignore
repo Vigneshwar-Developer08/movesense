@@ -1,0 +1,11 @@
+# Deployment-only excludes: keep the uploaded bundle small and free of local build output.
+client/.next
+client/node_modules
+client/out
+server/__pycache__
+server/tests
+server/matlab
+server/.pytest_cache
+server/data/raw
+**/*.pyc
+**/.DS_Store

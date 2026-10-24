@@ -6,15 +6,23 @@ Lengths are in cm, speeds in m/s. IMU quality and reference validation are repor
 ## Setup (Python 3.10+)
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt   # runtime deps + pytest/matplotlib/uvicorn
 pytest                      # synthetic signals + API/local-storage tests
 ```
 
+`requirements.txt` is the lean runtime set installed by Vercel; `requirements-dev.txt`
+adds the test runner, the matplotlib replay viewer, and uvicorn.
+
 ## Web frontend flow (scan / connect / disconnect / live tracking via Next.js)
+From the repository root, `vercel dev -L` starts both services with `/api/*`
+routed to FastAPI. To run them separately instead:
 ```bash
 cd server && uvicorn api:app --host 0.0.0.0 --port 8000
 cd client && npm run dev            # http://localhost:3000
 ```
+Set `NEXT_PUBLIC_API_URL=http://localhost:8000` for the separate-server flow;
+when the app is deployed as one Vercel project, requests stay same-origin and
+no URL is needed.
 - Devices page: Scan -> Connect / Disconnect / Remove (owns all BLE device management).
 - Live Tracking page: pick the connected sensor -> Start backend session
   (`POST /api/tracking/start`), polls `GET /api/tracking/{id}` +
@@ -44,6 +52,10 @@ cd client && npm run dev            # http://localhost:3000
 ## Local output storage (current, no database)
 The API saves its output on the server filesystem. No SQL connection is used
 and `schema.sql` is only an optional future-proposal file.
+On Vercel the deployment is read-only, so the API writes to `/tmp/movesense`
+(override with `MOVESENSE_DATA_DIR`) and seeds the bundled sample trajectories
+there. That directory is ephemeral; see the root `README.md` for the full
+serverless caveats.
 - `data/raw/{session_id}.csv`, `.json`, `.bin` — raw IMU capture written by
   `acquisition.record_session` (this happens even when no A->B trajectory completes).
 - `data/processed/{MOVE_id}/` — trajectory CSV and summary JSON written by

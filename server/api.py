@@ -10,6 +10,7 @@ Usage:
 import asyncio
 import logging
 import math
+import os
 import re
 from collections import deque
 from contextlib import asynccontextmanager
@@ -163,9 +164,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_extra_origins = [
+    origin.strip()
+    for origin in os.environ.get("MOVESENSE_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    # Same-origin deployments (one Vercel project) do not need CORS at all;
+    # these entries keep the split localhost workflow working.
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", *_extra_origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -207,6 +216,10 @@ async def health():
         "status": "ok",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "bluetooth_adapter": _bluetooth_adapter_name(),
+        "bluetooth_available": acquisition.BLUETOOTH_AVAILABLE
+        and not config.ON_SERVERLESS,
+        "serverless": config.ON_SERVERLESS,
+        "writable_data_dir": str(config.DATA_ROOT),
     }
 
 
@@ -228,8 +241,10 @@ class SignInRequest(BaseModel):
 def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
     """HttpOnly cookie so the browser reports the signed-in user on every request.
 
-    ``secure=False`` is intentional: this build serves plain HTTP on localhost.
-    Cookies ignore ports, so a token set by :8000 is sent to :3000 as well.
+    The frontend and API share one origin when deployed as a single Vercel
+    project, so the cookie is marked ``Secure`` there (TLS terminates at the
+    platform). Local HTTP development keeps ``secure=False``, otherwise the
+    browser would drop the cookie.
     """
     response.set_cookie(
         key=auth_mod.SESSION_COOKIE,
@@ -237,7 +252,7 @@ def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
         max_age=auth_mod.REMEMBER_TTL_S if remember else None,
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=config.SECURE_COOKIES,
         path="/",
     )
 

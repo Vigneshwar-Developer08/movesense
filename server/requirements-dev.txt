@@ -1,0 +1,6 @@
+# Local development and tests (includes the runtime dependencies).
+-r requirements.txt
+matplotlib
+pytest
+httpx
+uvicorn[standard]
