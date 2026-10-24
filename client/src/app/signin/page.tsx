@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { signIn, resetPassword, resendConfirmationEmail } from "@/lib/auth";
+import { signIn } from "@/lib/auth";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -15,16 +15,10 @@ export default function SignInPage() {
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const [isResetting, setIsResetting] = useState(false);
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-  const [resendingEmail, setResendingEmail] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    setInfoMessage(null);
     setIsLoading(true);
 
     try {
@@ -45,53 +39,6 @@ export default function SignInPage() {
       setIsLoading(false);
     }
   };
-
-  const handleResendConfirmation = async () => {
-    if (!email) {
-      setFormError("Please enter your email address to resend confirmation.");
-      return;
-    }
-    setResendingEmail(true);
-    try {
-      await resendConfirmationEmail(email);
-      setInfoMessage(
-        `Confirmation link has been resent to ${email}. Please check your inbox or spam folder.`,
-      );
-      setFormError(null);
-    } catch (err: unknown) {
-      setFormError(
-        err instanceof Error
-          ? err.message
-          : "Failed to resend confirmation email.",
-      );
-    } finally {
-      setResendingEmail(false);
-    }
-  };
-
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!resetEmail) return;
-    setIsResetting(true);
-    try {
-      await resetPassword(resetEmail);
-      setInfoMessage(
-        `Password reset link sent to ${resetEmail}. Check your inbox!`,
-      );
-      setShowForgotModal(false);
-      setFormError(null);
-    } catch (err: unknown) {
-      setFormError(
-        err instanceof Error ? err.message : "Failed to send reset email.",
-      );
-    } finally {
-      setIsResetting(false);
-    }
-  };
-
-  const isEmailNotConfirmed =
-    formError?.toLowerCase().includes("email not confirmed") ||
-    formError?.toLowerCase().includes("not confirmed");
 
   return (
     <div className="min-h-screen bg-background font-body-md text-body-md text-on-surface antialiased flex items-center justify-center p-gutter selection:bg-primary-container selection:text-white">
@@ -162,41 +109,12 @@ export default function SignInPage() {
               </header>
 
               {/* Status Notifications */}
-              {infoMessage && (
-                <div className="rounded-lg bg-primary-fixed/20 p-3 text-body-sm text-primary border border-primary/20 flex items-start gap-2">
-                  <span className="material-symbols-outlined text-[18px] shrink-0 mt-0.5">
-                    info
-                  </span>
-                  <div>{infoMessage}</div>
-                </div>
-              )}
-
               {formError && (
-                <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex flex-col gap-2">
-                  <div className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
-                      error
-                    </span>
-                    <span>{formError}</span>
-                  </div>
-
-                  {isEmailNotConfirmed && (
-                    <button
-                      type="button"
-                      onClick={handleResendConfirmation}
-                      disabled={resendingEmail}
-                      className="mt-1 self-start inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-lowest text-primary text-xs font-semibold rounded-md border border-primary/30 hover:bg-surface-container-low transition-colors"
-                    >
-                      {resendingEmail ? (
-                        <span className="inline-block w-3.5 h-3.5 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></span>
-                      ) : (
-                        <span className="material-symbols-outlined text-[14px]">
-                          send
-                        </span>
-                      )}
-                      Resend Confirmation Link
-                    </button>
-                  )}
+                <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex items-start gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
+                    error
+                  </span>
+                  <span>{formError}</span>
                 </div>
               )}
 
@@ -218,10 +136,10 @@ export default function SignInPage() {
                       className="w-full h-9 px-space-md pr-10 bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/40 focus:shadow-sm border border-outline-variant/30 transition-all duration-150"
                       id="email"
                       name="email"
+                      autoComplete="username"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@lab.example"
-                      autoComplete="username"
                       required
                       type="email"
                     />
@@ -233,36 +151,24 @@ export default function SignInPage() {
 
                 {/* Password Field */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <label
-                      className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5"
-                      htmlFor="password"
-                    >
-                      <span className="material-symbols-outlined text-[15px] text-secondary">
-                        lock
-                      </span>{" "}
-                      Password
-                    </label>
-                    <button
-                      type="button"
-                      className="font-label-md text-label-md text-primary hover:text-on-primary-fixed-variant transition-colors cursor-pointer"
-                      onClick={() => {
-                        setResetEmail(email);
-                        setShowForgotModal(true);
-                      }}
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
+                  <label
+                    className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5"
+                    htmlFor="password"
+                  >
+                    <span className="material-symbols-outlined text-[15px] text-secondary">
+                      lock
+                    </span>{" "}
+                    Password
+                  </label>
                   <div className="relative flex items-center">
                     <input
                       className="w-full h-9 pl-space-md pr-10 bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/40 focus:shadow-sm border border-outline-variant/30 transition-all duration-150 tracking-wider"
                       id="password"
                       name="password"
+                      autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
-                      autoComplete="current-password"
                       minLength={6}
                       required
                       type={showPassword ? "text" : "password"}
@@ -302,7 +208,7 @@ export default function SignInPage() {
                   <span className="material-symbols-outlined text-[15px] text-primary">
                     verified_user
                   </span>
-                  <span>Authentication &amp; telemetry accounts secured by Supabase.</span>
+                  <span>Direct Supabase authentication.</span>
                 </div>
 
                 {/* Submit Button */}
@@ -338,68 +244,6 @@ export default function SignInPage() {
           </div>
         </div>
       </main>
-
-      {/* Forgot Password Modal */}
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-xl bg-surface-container-lowest border border-outline-variant/30 shadow-2xl p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">
-                  lock_reset
-                </span>
-                Reset Password
-              </h2>
-              <button
-                onClick={() => setShowForgotModal(false)}
-                className="text-secondary hover:text-on-surface p-1 rounded"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  close
-                </span>
-              </button>
-            </div>
-
-            <p className="font-body-sm text-body-sm text-secondary">
-              Enter your account email to receive a password recovery link.
-            </p>
-
-            <form onSubmit={handleResetPassword} className="flex flex-col gap-3">
-              <input
-                type="email"
-                id="reset-email"
-                name="resetEmail"
-                autoComplete="email"
-                required
-                value={resetEmail}
-                onChange={(e) => setResetEmail(e.target.value)}
-                placeholder="you@lab.example"
-                className="w-full h-10 px-3 bg-surface-container-low text-on-surface rounded-lg border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary/40 text-sm"
-              />
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowForgotModal(false)}
-                  className="px-3 py-1.5 rounded-lg text-sm text-secondary hover:bg-surface-container-low"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isResetting}
-                  className="px-4 py-1.5 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:bg-on-primary-fixed-variant transition-colors disabled:opacity-70 flex items-center gap-1.5"
-                >
-                  {isResetting && (
-                    <span className="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                  )}
-                  Send Reset Link
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

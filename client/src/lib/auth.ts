@@ -10,12 +10,6 @@ export interface AuthUser {
   last_login_at: string | null;
 }
 
-export interface SignUpResult {
-  user: AuthUser | null;
-  hasSession: boolean;
-  message?: string;
-}
-
 export const SESSION_COOKIE = "movesense_session";
 
 /**
@@ -91,12 +85,12 @@ export async function signIn(
   return mapSupabaseUser(data.user)!;
 }
 
-/** Register a new user with Supabase Auth, storing metadata (name). */
+/** Register a new user with Supabase Auth without email confirmation. */
 export async function signUp(
   fullName: string,
   email: string,
   password: string,
-): Promise<SignUpResult> {
+): Promise<AuthUser> {
   const { data, error } = await supabase.auth.signUp({
     email: email.trim(),
     password,
@@ -112,20 +106,18 @@ export async function signUp(
     throw new Error(error.message);
   }
 
+  // If session is already created
   if (data.session) {
     setSessionCookie(true, true);
-    return {
-      user: mapSupabaseUser(data.user),
-      hasSession: true,
-    };
+    return mapSupabaseUser(data.user)!;
   }
 
-  return {
-    user: mapSupabaseUser(data.user),
-    hasSession: false,
-    message:
-      "Registration successful! Please check your email inbox to confirm your account before signing in.",
-  };
+  // Attempt direct sign-in to establish immediate session
+  try {
+    return await signIn(email, password, true);
+  } catch {
+    return mapSupabaseUser(data.user)!;
+  }
 }
 
 /** Sign out from Supabase Auth and clear session cookies. */
@@ -137,24 +129,6 @@ export async function signOutRequest(): Promise<void> {
   } finally {
     setSessionCookie(false);
   }
-}
-
-/** Send a password reset email via Supabase Auth. */
-export async function resetPassword(email: string): Promise<void> {
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-    redirectTo: `${origin}/signin`,
-  });
-  if (error) throw new Error(error.message);
-}
-
-/** Resend account confirmation email via Supabase Auth. */
-export async function resendConfirmationEmail(email: string): Promise<void> {
-  const { error } = await supabase.auth.resend({
-    type: "signup",
-    email: email.trim(),
-  });
-  if (error) throw new Error(error.message);
 }
 
 export function displayName(user: AuthUser | null): string {

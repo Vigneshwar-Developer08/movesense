@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { signUp, resendConfirmationEmail } from "@/lib/auth";
+import { signUp } from "@/lib/auth";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -16,11 +16,6 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-
-  // Success state when email confirmation is needed
-  const [confirmationSent, setConfirmationSent] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [resendStatus, setResendStatus] = useState<string | null>(null);
 
   const getPasswordStrength = (val: string) => {
     if (!val || val.length < 4) {
@@ -52,17 +47,10 @@ export default function SignUpPage() {
 
     setIsLoading(true);
     try {
-      const result = await signUp(fullName, email, password);
-
-      if (result.hasSession) {
-        // Email confirmation is disabled in Supabase, instant session!
-        await refresh();
-        router.replace("/dashboard");
-        router.refresh();
-      } else {
-        // Email confirmation is required by Supabase Auth
-        setConfirmationSent(true);
-      }
+      await signUp(fullName, email, password);
+      await refresh();
+      router.replace("/dashboard");
+      router.refresh();
     } catch (err: unknown) {
       const msg =
         err instanceof Error
@@ -73,28 +61,6 @@ export default function SignUpPage() {
       setIsLoading(false);
     }
   };
-
-  const handleResend = async () => {
-    if (!email) return;
-    setResending(true);
-    setResendStatus(null);
-    try {
-      await resendConfirmationEmail(email);
-      setResendStatus("Confirmation email has been resent to your inbox.");
-    } catch (err: unknown) {
-      setResendStatus(
-        err instanceof Error
-          ? err.message
-          : "Failed to resend confirmation email.",
-      );
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const isRateLimit =
-    formError?.toLowerCase().includes("rate limit") ||
-    formError?.toLowerCase().includes("over_email_send_rate_limit");
 
   return (
     <div className="min-h-screen bg-background font-body-md text-body-md text-on-surface antialiased flex items-center justify-center p-gutter selection:bg-primary-container selection:text-white">
@@ -121,280 +87,175 @@ export default function SignUpPage() {
               </div>
               <div>
                 <h1 className="font-headline-md text-headline-md text-on-surface tracking-tight">
-                  {confirmationSent ? "Verify Your Email" : "Create an Account"}
+                  Create an Account
                 </h1>
                 <p className="font-body-sm text-body-sm text-secondary mt-0.5">
-                  {confirmationSent
-                    ? "Almost there! Confirm your account to access the workspace."
-                    : "Enter your lab details below to set up your Supabase account."}
+                  Enter your details below to create an account directly in Supabase.
                 </p>
               </div>
             </header>
 
-            {confirmationSent ? (
-              /* Confirmation Required Card */
-              <div className="relative flex flex-col gap-5 pt-2">
-                <div className="rounded-xl bg-primary-fixed/20 border border-primary/20 p-5 flex flex-col items-center text-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined text-[28px]">
-                      mark_email_read
-                    </span>
-                  </div>
-                  <div>
-                    <h2 className="font-headline-sm text-headline-sm text-on-surface">
-                      Check your inbox
-                    </h2>
-                    <p className="text-body-sm text-secondary mt-1">
-                      We sent a verification link to{" "}
-                      <span className="font-semibold text-on-surface">{email}</span>.
-                    </p>
-                  </div>
-                </div>
-
-                {resendStatus && (
-                  <p className="rounded-lg bg-surface-container-low px-3 py-2 text-xs text-primary border border-outline-variant/20 text-center">
-                    {resendStatus}
-                  </p>
-                )}
-
-                <div className="flex flex-col gap-2">
-                  <Link
-                    href="/signin"
-                    className="w-full h-11 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm tracking-normal flex items-center justify-center gap-2 shadow-md hover:bg-on-primary-fixed-variant transition-all cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[19px]">
-                      login
-                    </span>
-                    <span>Go to Sign In</span>
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={resending}
-                    className="w-full h-10 rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container border border-outline-variant/30 transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
-                  >
-                    {resending ? (
-                      <span className="inline-block w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></span>
-                    ) : (
-                      <span className="material-symbols-outlined text-[18px] text-secondary">
-                        refresh
-                      </span>
-                    )}
-                    <span>Resend Confirmation Email</span>
-                  </button>
+            {/* Sign Up Form */}
+            <form onSubmit={handleSubmit} className="relative flex flex-col gap-4">
+              {/* Full Name */}
+              <div className="flex flex-col gap-1.5">
+                <label
+                  className="font-label-md text-label-md text-secondary"
+                  htmlFor="full-name"
+                >
+                  Full Name
+                </label>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined absolute left-3 text-secondary text-[18px]">
+                    badge
+                  </span>
+                  <input
+                    className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
+                    id="full-name"
+                    name="fullName"
+                    autoComplete="name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="e.g. Dr. Kristina Lindqvist"
+                    required
+                    type="text"
+                  />
                 </div>
               </div>
-            ) : (
-              /* Sign Up Form */
-              <form onSubmit={handleSubmit} className="relative flex flex-col gap-4">
-                {/* Full Name */}
-                <div className="flex flex-col gap-1.5">
-                  <label
-                    className="font-label-md text-label-md text-secondary"
-                    htmlFor="full-name"
-                  >
-                    Full Name
-                  </label>
-                  <div className="relative flex items-center">
-                    <span className="material-symbols-outlined absolute left-3 text-secondary text-[18px]">
-                      badge
-                    </span>
-                    <input
-                      className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
-                      id="full-name"
-                      name="fullName"
-                      autoComplete="name"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Dr. Kristina Lindqvist"
-                      required
-                      type="text"
-                    />
-                  </div>
-                </div>
 
-                {/* Organization Email */}
-                <div className="flex flex-col gap-1.5">
-                  <label
-                    className="font-label-md text-label-md text-secondary"
-                    htmlFor="org-email"
-                  >
-                    Email
-                  </label>
-                  <div className="relative flex items-center">
-                    <span className="material-symbols-outlined absolute left-3 text-secondary text-[18px]">
-                      mail
-                    </span>
-                    <input
-                      className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
-                      id="org-email"
-                      name="email"
-                      autoComplete="username"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="k.lindqvist@karolinska.se"
-                      required
-                      type="email"
-                    />
-                  </div>
-                </div>
-
-                {/* Passwords */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-1.5">
-                    <label
-                      className="font-label-md text-label-md text-secondary"
-                      htmlFor="password"
-                    >
-                      Password
-                    </label>
-                    <div className="relative flex items-center">
-                      <input
-                        className="w-full h-10 px-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="At least 8 chars"
-                        autoComplete="new-password"
-                        minLength={8}
-                        required
-                        type={showPassword ? "text" : "password"}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-2 text-outline hover:text-on-surface p-1 cursor-pointer"
-                        aria-label="Toggle password visibility"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">
-                          {showPassword ? "visibility_off" : "visibility"}
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label
-                      className="font-label-md text-label-md text-secondary"
-                      htmlFor="confirm-password"
-                    >
-                      Confirm Password
-                    </label>
-                    <div className="relative flex items-center">
-                      <input
-                        className="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
-                        id="confirm-password"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Repeat password"
-                        autoComplete="new-password"
-                        minLength={8}
-                        required
-                        type={showPassword ? "text" : "password"}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Password strength feedback */}
-                {password && (
-                  <div className="flex items-center justify-between px-1 text-xs font-mono">
-                    <span className="text-secondary text-[11px]">
-                      Security Grade:
-                    </span>
-                    <span className={`text-[11px] ${strength.color}`}>
-                      {strength.label}
-                    </span>
-                  </div>
-                )}
-
-                {/* Form Error & Rate Limit Help */}
-                {formError && (
-                  <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex flex-col gap-2">
-                    <div className="flex items-start gap-2">
-                      <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
-                        error
-                      </span>
-                      <div className="flex-1">
-                        <span className="font-semibold block">
-                          {isRateLimit
-                            ? "Supabase Email Rate Limit Exceeded"
-                            : formError}
-                        </span>
-                        {isRateLimit && (
-                          <div className="mt-1 text-xs leading-relaxed opacity-90 space-y-1">
-                            <p>
-                              Supabase free projects limit built-in verification emails to 3 per hour.
-                            </p>
-                            <p className="font-medium text-on-surface pt-1">
-                              <strong>Instant Fix in 10 seconds:</strong>
-                            </p>
-                            <ol className="list-decimal list-inside space-y-0.5">
-                              <li>
-                                Open{" "}
-                                <a
-                                  href="https://supabase.com/dashboard/project/qembmvzlxwtpozrkwjma/auth/providers"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline font-semibold hover:text-primary"
-                                >
-                                  Supabase Auth Providers Settings
-                                </a>
-                              </li>
-                              <li>Under <strong>Email</strong>, turn <strong>OFF &ldquo;Confirm email&rdquo;</strong></li>
-                              <li>Click <strong>Save</strong></li>
-                            </ol>
-                            <p className="pt-1">
-                              Once turned off, accounts sign in instantly without sending verification emails, completely bypassing rate limits.
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {isRateLimit && (
-                      <div className="flex items-center gap-2 pt-1">
-                        <Link
-                          href="/signin"
-                          className="text-xs font-semibold px-2.5 py-1 rounded bg-surface-container-lowest text-primary border border-primary/30 hover:bg-surface-container-low transition-colors"
-                        >
-                          Try Sign In
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 rounded-lg bg-surface-container-low px-3 py-2 text-[11px] text-secondary border border-outline-variant/20">
-                  <span className="material-symbols-outlined text-[15px] text-primary">
-                    cloud_done
-                  </span>
-                  <span>
-                    User profile and authentication securely managed with Supabase.
-                  </span>
-                </div>
-
-                <button
-                  className="w-full h-11 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm tracking-normal flex items-center justify-center gap-2 shadow-md hover:bg-on-primary-fixed-variant active:scale-[0.99] transition-all mt-1 cursor-pointer disabled:opacity-70"
-                  type="submit"
-                  disabled={isLoading}
+              {/* Organization Email */}
+              <div className="flex flex-col gap-1.5">
+                <label
+                  className="font-label-md text-label-md text-secondary"
+                  htmlFor="org-email"
                 >
-                  {isLoading ? (
-                    <span className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-[20px]">
-                        how_to_reg
+                  Email
+                </label>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined absolute left-3 text-secondary text-[18px]">
+                    mail
+                  </span>
+                  <input
+                    className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
+                    id="org-email"
+                    name="email"
+                    autoComplete="username"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="k.lindqvist@karolinska.se"
+                    required
+                    type="email"
+                  />
+                </div>
+              </div>
+
+              {/* Passwords */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    className="font-label-md text-label-md text-secondary"
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      className="w-full h-10 px-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
+                      id="password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="At least 8 chars"
+                      autoComplete="new-password"
+                      minLength={8}
+                      required
+                      type={showPassword ? "text" : "password"}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 text-outline hover:text-on-surface p-1 cursor-pointer"
+                      aria-label="Toggle password visibility"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">
+                        {showPassword ? "visibility_off" : "visibility"}
                       </span>
-                      <span>Create Account</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    className="font-label-md text-label-md text-secondary"
+                    htmlFor="confirm-password"
+                  >
+                    Confirm Password
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      className="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
+                      id="confirm-password"
+                      name="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Repeat password"
+                      autoComplete="new-password"
+                      minLength={8}
+                      required
+                      type={showPassword ? "text" : "password"}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Password strength feedback */}
+              {password && (
+                <div className="flex items-center justify-between px-1 text-xs font-mono">
+                  <span className="text-secondary text-[11px]">
+                    Security Grade:
+                  </span>
+                  <span className={`text-[11px] ${strength.color}`}>
+                    {strength.label}
+                  </span>
+                </div>
+              )}
+
+              {/* Form Error */}
+              {formError && (
+                <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex items-start gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
+                    error
+                  </span>
+                  <span>{formError}</span>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 rounded-lg bg-surface-container-low px-3 py-2 text-[11px] text-secondary border border-outline-variant/20">
+                <span className="material-symbols-outlined text-[15px] text-primary">
+                  cloud_done
+                </span>
+                <span>
+                  Direct account creation with Supabase.
+                </span>
+              </div>
+
+              <button
+                className="w-full h-11 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm tracking-normal flex items-center justify-center gap-2 shadow-md hover:bg-on-primary-fixed-variant active:scale-[0.99] transition-all mt-1 cursor-pointer disabled:opacity-70"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[20px]">
+                      how_to_reg
+                    </span>
+                    <span>Create Account</span>
+                  </>
+                )}
+              </button>
+            </form>
 
             <footer className="flex flex-col items-center gap-4 pt-2">
               <div className="flex items-center gap-1.5 font-body-sm text-body-sm text-secondary">
