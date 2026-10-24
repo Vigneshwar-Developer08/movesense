@@ -1,0 +1,14 @@
+{
+  "name": "movesense",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Movesense IMU trajectory app: Next.js frontend + FastAPI backend, deployed as one Vercel project.",
+  "scripts": {
+    "dev:all": "vercel dev --local",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "python -m uvicorn api:app --reload --host 0.0.0.0 --port 8000 --app-dir server",
+    "build": "npm --prefix client run build",
+    "lint": "npm --prefix client run lint",
+    "install:client": "npm --prefix client install"
+  }
+}

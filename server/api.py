@@ -10,6 +10,7 @@ Usage:
 import asyncio
 import logging
 import math
+import os
 import re
 from collections import deque
 from contextlib import asynccontextmanager
@@ -163,9 +164,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_extra_origins = [
+    origin.strip()
+    for origin in os.environ.get("MOVESENSE_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    # Same-origin deployments (one Vercel project) do not need CORS at all;
+    # these entries keep the split localhost workflow working.
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", *_extra_origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -207,6 +216,10 @@ async def health():
         "status": "ok",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "bluetooth_adapter": _bluetooth_adapter_name(),
+        "bluetooth_available": acquisition.BLUETOOTH_AVAILABLE
+        and not config.ON_SERVERLESS,
+        "serverless": config.ON_SERVERLESS,
+        "writable_data_dir": str(config.DATA_ROOT),
     }
 
 
@@ -225,11 +238,30 @@ class SignInRequest(BaseModel):
     remember: bool = True
 
 
-def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
+def _is_secure_request(request: Request) -> bool:
+    """Whether the browser reached us over HTTPS (Vercel sets X-Forwarded-Proto)."""
+    hostname = (request.url.hostname or "").lower()
+    if hostname in {"localhost", "127.0.0.1", "::1"}:
+        # ``vercel dev`` proxies over plain HTTP but still forwards an HTTPS
+        # proto header, so the host check must win for local development.
+        return False
+    if os.environ.get("VERCEL_ENV") in {"production", "preview"}:
+        return True
+    forwarded = request.headers.get("x-forwarded-proto", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip().lower() == "https"
+    return request.url.scheme == "https"
+
+
+def _set_session_cookie(
+    response: Response, request: Request, token: str, remember: bool
+) -> None:
     """HttpOnly cookie so the browser reports the signed-in user on every request.
 
-    ``secure=False`` is intentional: this build serves plain HTTP on localhost.
-    Cookies ignore ports, so a token set by :8000 is sent to :3000 as well.
+    The frontend and API share one origin when deployed as a single Vercel
+    project, so the cookie is marked ``Secure`` there. Local HTTP development
+    (including ``vercel dev``) keeps ``secure=False``, otherwise the browser
+    would drop the cookie.
     """
     response.set_cookie(
         key=auth_mod.SESSION_COOKIE,
@@ -237,29 +269,29 @@ def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
         max_age=auth_mod.REMEMBER_TTL_S if remember else None,
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=config.SECURE_COOKIES or _is_secure_request(request),
         path="/",
     )
 
 
 @app.post("/api/auth/signup", status_code=201)
-def auth_signup(req: SignUpRequest, response: Response):
+def auth_signup(req: SignUpRequest, request: Request, response: Response):
     try:
         user = auth_mod.create_user(req.full_name, req.email, req.password)
     except auth_mod.AuthError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
     token = auth_mod.create_session(str(user["id"]), remember=True)
-    _set_session_cookie(response, token, remember=True)
+    _set_session_cookie(response, request, token, remember=True)
     return {"user": auth_mod.public_user(user)}
 
 
 @app.post("/api/auth/signin")
-def auth_signin(req: SignInRequest, response: Response):
+def auth_signin(req: SignInRequest, request: Request, response: Response):
     user = auth_mod.authenticate(req.email, req.password)
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid email or password.")
     token = auth_mod.create_session(str(user["id"]), remember=req.remember)
-    _set_session_cookie(response, token, remember=req.remember)
+    _set_session_cookie(response, request, token, remember=req.remember)
     return {"user": auth_mod.public_user(user)}
 
 

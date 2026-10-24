@@ -12,8 +12,42 @@ from typing import BinaryIO, Callable
 
 import numpy as np
 import pandas as pd
-from bleak import BleakClient, BleakScanner
-from bleak.exc import BleakError
+
+try:  # BLE is optional: serverless runtimes have no Bluetooth adapter.
+    from bleak import BleakClient, BleakScanner
+    from bleak.exc import BleakError
+
+    BLUETOOTH_AVAILABLE = True
+    BLE_IMPORT_ERROR = ""
+except Exception as _ble_import_error:  # pragma: no cover - platform dependent
+    BLUETOOTH_AVAILABLE = False
+    BLE_IMPORT_ERROR = str(_ble_import_error) or _ble_import_error.__class__.__name__
+
+    class BleakError(Exception):
+        """Stand-in so callers can still catch BLE failures without bleak."""
+
+    class _UnavailableBleak:
+        """Fails with a readable BLE error instead of an AttributeError."""
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            raise BleakError(
+                f"No Bluetooth support on this runtime ({BLE_IMPORT_ERROR})."
+            )
+
+        @classmethod
+        async def discover(cls, *args: object, **kwargs: object) -> None:
+            raise BleakError(
+                f"No Bluetooth support on this runtime ({BLE_IMPORT_ERROR})."
+            )
+
+        @staticmethod
+        async def find_device_by_address(*args: object, **kwargs: object) -> None:
+            raise BleakError(
+                f"No Bluetooth support on this runtime ({BLE_IMPORT_ERROR})."
+            )
+
+    BleakClient = _UnavailableBleak  # type: ignore[assignment,misc]
+    BleakScanner = _UnavailableBleak  # type: ignore[assignment,misc]
 
 import config
 
@@ -39,13 +73,20 @@ def describe_ble_error(error: BaseException, address: str | None = None) -> tupl
         or "adapter not found" in low
         or "no default adapter" in low
         or "no adapters" in low
+        or "no bluetooth support" in low
         or "org.bluez.error.notready" in low
         or "system_bus_socket" in low
         or "failed to connect to socket" in low
         or "service unknown" in low
     ):
         return f"No Bluetooth adapter/service available ({raw}). Turn Bluetooth on (Linux: install and start BlueZ).", True
-    if "turned off" in low or "powered off" in low or "bluetooth is off" in low or "poweredoff" in low:
+    if (
+        "turned off" in low
+        or "powered off" in low
+        or "not powered on" in low
+        or "bluetooth is off" in low
+        or "poweredoff" in low
+    ):
         return f"Bluetooth is turned off ({raw}). Switch it on and retry.", True
     if "permission" in low or "not authorized" in low or "denied" in low or "unauthorized" in low:
         return (f"Bluetooth permission denied ({raw}). Allow Bluetooth for your terminal/Python "

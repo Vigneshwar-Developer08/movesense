@@ -1,9 +1,8 @@
-bleak
+# Runtime dependencies for the FastAPI service (installed by Vercel).
+# Development-only tools live in requirements-dev.txt.
+fastapi
+pydantic
 numpy
 pandas
 scipy
-matplotlib
-pytest
-fastapi
-uvicorn[standard]
-pydantic
+bleak

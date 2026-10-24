@@ -3,13 +3,63 @@
 Protocol/hardware facts carry their documentation source. Everything else is a tunable
 project parameter; the values used are written into every session summary.
 """
+import os
+import shutil
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-RAW_DIR = PROJECT_ROOT / "data" / "raw"
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-LOCAL_DIR = PROJECT_ROOT / "data" / "local"
+
+# Vercel (and other function-as-a-service runtimes) mount the deployment
+# read-only; only the system temp directory is writable. Detect that and keep
+# every generated file there instead of inside the checked-out ``data/`` tree.
+ON_SERVERLESS = bool(
+    os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+)
+_DATA_ROOT_OVERRIDE = os.environ.get("MOVESENSE_DATA_DIR")
+
+if _DATA_ROOT_OVERRIDE:
+    DATA_ROOT = Path(_DATA_ROOT_OVERRIDE).expanduser()
+elif ON_SERVERLESS:
+    DATA_ROOT = Path(tempfile.gettempdir()) / "movesense"
+else:
+    DATA_ROOT = PROJECT_ROOT / "data"
+
+RAW_DIR = DATA_ROOT / "raw"
+PROCESSED_DIR = DATA_ROOT / "processed"
+LOCAL_DIR = DATA_ROOT / "local"
+
+# Force Secure session cookies when the API is served over HTTPS behind a proxy
+# that does not forward ``X-Forwarded-Proto``. Normally the request scheme is
+# detected per request instead, so local HTTP development still works.
+SECURE_COOKIES = os.environ.get("MOVESENSE_SECURE_COOKIES") == "1"
+
+
+def _ensure_runtime_data() -> None:
+    """Create the writable data directories and seed bundled sample output.
+
+    On a serverless cold start the sample trajectories committed under
+    ``data/processed`` are copied to the writable directory so the dashboard
+    and report pages have something to show.
+    """
+    for folder in (RAW_DIR, PROCESSED_DIR, LOCAL_DIR):
+        try:
+            folder.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            continue
+    if not ON_SERVERLESS:
+        return
+    bundled = PROJECT_ROOT / "data" / "processed"
+    try:
+        if bundled.is_dir() and not any(PROCESSED_DIR.iterdir()):
+            shutil.copytree(bundled, PROCESSED_DIR, dirs_exist_ok=True)
+    except OSError:
+        pass
+
+
+_ensure_runtime_data()
+
 PROCESSING_VERSION = "0.2.0"
 
 # --- GATT SensorData Protocol (GSP) -------------------------------------------------
