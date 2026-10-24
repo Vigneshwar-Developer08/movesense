@@ -55,7 +55,7 @@ export default function SignUpPage() {
       const result = await signUp(fullName, email, password);
 
       if (result.hasSession) {
-        // Email confirmation is not required or session active
+        // Email confirmation is disabled in Supabase, instant session!
         await refresh();
         router.replace("/dashboard");
         router.refresh();
@@ -91,6 +91,10 @@ export default function SignUpPage() {
       setResending(false);
     }
   };
+
+  const isRateLimit =
+    formError?.toLowerCase().includes("rate limit") ||
+    formError?.toLowerCase().includes("over_email_send_rate_limit");
 
   return (
     <div className="min-h-screen bg-background font-body-md text-body-md text-on-surface antialiased flex items-center justify-center p-gutter selection:bg-primary-container selection:text-white">
@@ -199,6 +203,8 @@ export default function SignUpPage() {
                     <input
                       className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
                       id="full-name"
+                      name="fullName"
+                      autoComplete="name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="e.g. Dr. Kristina Lindqvist"
@@ -223,6 +229,8 @@ export default function SignUpPage() {
                     <input
                       className="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
                       id="org-email"
+                      name="email"
+                      autoComplete="username"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="k.lindqvist@karolinska.se"
@@ -245,6 +253,7 @@ export default function SignUpPage() {
                       <input
                         className="w-full h-10 px-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
                         id="password"
+                        name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="At least 8 chars"
@@ -256,7 +265,7 @@ export default function SignUpPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-2 text-outline hover:text-on-surface p-1"
+                        className="absolute right-2 text-outline hover:text-on-surface p-1 cursor-pointer"
                         aria-label="Toggle password visibility"
                       >
                         <span className="material-symbols-outlined text-[16px]">
@@ -277,6 +286,7 @@ export default function SignUpPage() {
                       <input
                         className="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border border-outline-variant/30 focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 focus:shadow-sm transition-all"
                         id="confirm-password"
+                        name="confirmPassword"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Repeat password"
@@ -301,12 +311,60 @@ export default function SignUpPage() {
                   </div>
                 )}
 
+                {/* Form Error & Rate Limit Help */}
                 {formError && (
-                  <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex items-start gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
-                      error
-                    </span>
-                    <span>{formError}</span>
+                  <div className="rounded-lg bg-error-container p-3 text-body-sm text-on-error-container border border-error/20 flex flex-col gap-2">
+                    <div className="flex items-start gap-2">
+                      <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">
+                        error
+                      </span>
+                      <div className="flex-1">
+                        <span className="font-semibold block">
+                          {isRateLimit
+                            ? "Supabase Email Rate Limit Exceeded"
+                            : formError}
+                        </span>
+                        {isRateLimit && (
+                          <div className="mt-1 text-xs leading-relaxed opacity-90 space-y-1">
+                            <p>
+                              Supabase free projects limit built-in verification emails to 3 per hour.
+                            </p>
+                            <p className="font-medium text-on-surface pt-1">
+                              <strong>Instant Fix in 10 seconds:</strong>
+                            </p>
+                            <ol className="list-decimal list-inside space-y-0.5">
+                              <li>
+                                Open{" "}
+                                <a
+                                  href="https://supabase.com/dashboard/project/qembmvzlxwtpozrkwjma/auth/providers"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline font-semibold hover:text-primary"
+                                >
+                                  Supabase Auth Providers Settings
+                                </a>
+                              </li>
+                              <li>Under <strong>Email</strong>, turn <strong>OFF &ldquo;Confirm email&rdquo;</strong></li>
+                              <li>Click <strong>Save</strong></li>
+                            </ol>
+                            <p className="pt-1">
+                              Once turned off, accounts sign in instantly without sending verification emails, completely bypassing rate limits.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {isRateLimit && (
+                      <div className="flex items-center gap-2 pt-1">
+                        <Link
+                          href="/signin"
+                          className="text-xs font-semibold px-2.5 py-1 rounded bg-surface-container-lowest text-primary border border-primary/30 hover:bg-surface-container-low transition-colors"
+                        >
+                          Try Sign In
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 )}
 

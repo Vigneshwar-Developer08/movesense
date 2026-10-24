@@ -367,6 +367,9 @@ export default function SignInPage() {
             <form onSubmit={handleResetPassword} className="flex flex-col gap-3">
               <input
                 type="email"
+                id="reset-email"
+                name="resetEmail"
+                autoComplete="email"
                 required
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
