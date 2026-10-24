@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Cookie set by the local API (server/api.py) on sign-in/sign-up.
- * It is HttpOnly, but the Next server still receives it on every request.
+ * Fast session cookie set on client sign-in/sign-up.
  */
 const SESSION_COOKIE = "movesense_session";
 
@@ -16,13 +15,16 @@ function isAuthRoute(pathname: string): boolean {
 }
 
 /**
- * Fast, cookie-presence gate. The API remains the source of truth: the client
- * AuthProvider validates the token against `/api/auth/me` and clears a stale
- * cookie, so this proxy only avoids rendering protected pages for visitors.
+ * Next.js route gate proxy for authentication.
  */
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  const signedIn = request.cookies.has(SESSION_COOKIE);
+
+  const hasMovesenseCookie = request.cookies.has(SESSION_COOKIE);
+  const hasSupabaseCookie = Array.from(request.cookies.getAll()).some(
+    (c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"),
+  );
+  const signedIn = hasMovesenseCookie || hasSupabaseCookie;
 
   if (isAuthRoute(pathname)) {
     if (signedIn) {

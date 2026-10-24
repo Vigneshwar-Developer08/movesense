@@ -1,6 +1,7 @@
-import { apiFetch } from "./api";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "./supabase";
 
-/** Safe subset of the local user record returned by the auth API. */
+/** Safe subset of the user record returned by Supabase Auth. */
 export interface AuthUser {
   id: string;
   full_name: string;
@@ -9,62 +10,151 @@ export interface AuthUser {
   last_login_at: string | null;
 }
 
-interface UserResponse {
-  user: AuthUser;
+export interface SignUpResult {
+  user: AuthUser | null;
+  hasSession: boolean;
+  message?: string;
 }
 
-function jsonBody(payload: unknown): RequestInit {
+export const SESSION_COOKIE = "movesense_session";
+
+/**
+ * Manage a fast session cookie for Next.js proxy route gating.
+ */
+export function setSessionCookie(active: boolean, remember: boolean = true) {
+  if (typeof document === "undefined") return;
+  if (active) {
+    const maxAge = remember ? 60 * 60 * 24 * 30 : 60 * 60 * 24; // 30 days vs 1 day
+    document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${maxAge}; SameSite=Lax`;
+  } else {
+    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  }
+}
+
+/** Converts a Supabase Auth User object into the application's AuthUser shape. */
+export function mapSupabaseUser(user: User | null): AuthUser | null {
+  if (!user) return null;
+  const fullName =
+    (user.user_metadata?.full_name as string) ||
+    (user.user_metadata?.display_name as string) ||
+    (user.user_metadata?.name as string) ||
+    (user.email ? user.email.split("@")[0] : "User");
+
   return {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    id: user.id,
+    full_name: fullName,
+    email: user.email || "",
+    created_at: user.created_at || null,
+    last_login_at: user.last_sign_in_at || null,
   };
 }
 
-/** Current user from the HttpOnly cookie, or null when not signed in. */
+/** Get the currently logged-in user from the active Supabase session. */
 export async function fetchCurrentUser(): Promise<AuthUser | null> {
   try {
-    const data = await apiFetch<UserResponse>("/api/auth/me", {
-      cache: "no-store",
-    });
-    return data.user;
-  } catch {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+    if (error || !session?.user) {
+      setSessionCookie(false);
+      return null;
+    }
+    setSessionCookie(true);
+    return mapSupabaseUser(session.user);
+  } catch (err) {
+    console.error("fetchCurrentUser error:", err);
     return null;
   }
 }
 
+/** Sign in with email and password via Supabase Auth. */
 export async function signIn(
   email: string,
   password: string,
-  remember: boolean,
+  remember: boolean = true,
 ): Promise<AuthUser> {
-  const data = await apiFetch<UserResponse>(
-    "/api/auth/signin",
-    jsonBody({ email, password, remember }),
-  );
-  return data.user;
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data.user) {
+    throw new Error("Unable to sign in. Please verify your credentials.");
+  }
+
+  setSessionCookie(true, remember);
+  return mapSupabaseUser(data.user)!;
 }
 
+/** Register a new user with Supabase Auth, storing metadata (name). */
 export async function signUp(
   fullName: string,
   email: string,
   password: string,
-): Promise<AuthUser> {
-  const data = await apiFetch<UserResponse>(
-    "/api/auth/signup",
-    jsonBody({ full_name: fullName, email, password }),
-  );
-  return data.user;
+): Promise<SignUpResult> {
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: {
+      data: {
+        full_name: fullName.trim(),
+        display_name: fullName.trim(),
+      },
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (data.session) {
+    setSessionCookie(true, true);
+    return {
+      user: mapSupabaseUser(data.user),
+      hasSession: true,
+    };
+  }
+
+  return {
+    user: mapSupabaseUser(data.user),
+    hasSession: false,
+    message:
+      "Registration successful! Please check your email inbox to confirm your account before signing in.",
+  };
 }
 
+/** Sign out from Supabase Auth and clear session cookies. */
 export async function signOutRequest(): Promise<void> {
   try {
-    await apiFetch<{ signed_out: boolean }>("/api/auth/signout", {
-      method: "POST",
-    });
-  } catch {
-    // Local sign-out should always clear the client view, even if the API is down.
+    await supabase.auth.signOut();
+  } catch (err) {
+    console.warn("Sign out error:", err);
+  } finally {
+    setSessionCookie(false);
   }
+}
+
+/** Send a password reset email via Supabase Auth. */
+export async function resetPassword(email: string): Promise<void> {
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo: `${origin}/signin`,
+  });
+  if (error) throw new Error(error.message);
+}
+
+/** Resend account confirmation email via Supabase Auth. */
+export async function resendConfirmationEmail(email: string): Promise<void> {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: email.trim(),
+  });
+  if (error) throw new Error(error.message);
 }
 
 export function displayName(user: AuthUser | null): string {

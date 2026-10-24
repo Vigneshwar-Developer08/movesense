@@ -13,13 +13,16 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   fetchCurrentUser,
   signOutRequest,
+  setSessionCookie,
+  mapSupabaseUser,
   type AuthUser,
 } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  /** Re-read the cookie session (call after sign-in/sign-up). */
+  /** Re-read the session (call after sign-in/sign-up). */
   refresh: () => Promise<AuthUser | null>;
   signOut: () => Promise<void>;
 }
@@ -59,11 +62,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return next;
   }, []);
 
-  // Read the cookie session once on mount. The Proxy already handles the
-  // first navigation; this call also validates the token against the API and
-  // keeps the header in sync after a refresh.
+  // Listen to Supabase auth events in real-time
   useEffect(() => {
     let cancelled = false;
+
     fetchCurrentUser()
       .then((next) => {
         if (cancelled || !mountedRef.current) return;
@@ -72,21 +74,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => {
         if (!cancelled && mountedRef.current) setLoading(false);
       });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled || !mountedRef.current) return;
+      if (session?.user) {
+        setUser(mapSupabaseUser(session.user));
+        setSessionCookie(true);
+      } else {
+        setUser(null);
+        setSessionCookie(false);
+      }
+      setLoading(false);
+    });
+
     return () => {
       cancelled = true;
+      subscription.unsubscribe();
     };
   }, []);
 
-  // Client-side guard as a backstop to Proxy: a stale cookie must not leave a
-  // protected page rendering without a user.
+  // Route protection guard
   useEffect(() => {
-    if (loading || user) return;
-    if (isPublicRoute(pathname)) return;
-    const next =
-      pathname && pathname !== "/"
-        ? `?next=${encodeURIComponent(pathname)}`
-        : "";
-    router.replace(`/signin${next}`);
+    if (loading) return;
+
+    if (!user && !isPublicRoute(pathname)) {
+      const next =
+        pathname && pathname !== "/"
+          ? `?next=${encodeURIComponent(pathname)}`
+          : "";
+      router.replace(`/signin${next}`);
+    } else if (user && isPublicRoute(pathname)) {
+      router.replace("/dashboard");
+    }
   }, [loading, user, pathname, router]);
 
   const signOut = useCallback(async () => {
