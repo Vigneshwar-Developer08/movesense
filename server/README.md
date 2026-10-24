@@ -14,7 +14,7 @@ pytest                      # synthetic signals + API/local-storage tests
 adds the test runner, the matplotlib replay viewer, and uvicorn.
 
 ## Web frontend flow (scan / connect / disconnect / live tracking via Next.js)
-From the repository root, `vercel dev -L` starts both services with `/api/*`
+From the repository root, `vercel dev --local` starts both services with `/api/*`
 routed to FastAPI. To run them separately instead:
 ```bash
 cd server && uvicorn api:app --host 0.0.0.0 --port 8000

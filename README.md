@@ -61,10 +61,10 @@ The response includes `bluetooth_available`, `serverless`, and
 
 ```bash
 npm i -g vercel
-vercel dev -L
+vercel dev --local
 ```
 
-`vercel dev -L` starts both services locally and rewrites `/api/*` to FastAPI.
+`vercel dev --local` starts both services locally and rewrites `/api/*` to FastAPI.
 
 ### Separate dev servers
 
@@ -89,8 +89,9 @@ does not proxy `/api` to FastAPI.
 From the repository root you can also run:
 
 ```bash
-npm run dev          # vercel dev -L
+npm run dev:all      # vercel dev --local (both services)
 npm run build        # builds the Next.js client
+npm run dev:client   # Next.js only (set NEXT_PUBLIC_API_URL)
 npm run dev:server   # uvicorn api:app from server/ (needs Python deps)
 ```
 

@@ -30,10 +30,10 @@ RAW_DIR = DATA_ROOT / "raw"
 PROCESSED_DIR = DATA_ROOT / "processed"
 LOCAL_DIR = DATA_ROOT / "local"
 
-# Vercel terminates TLS in front of the function, so session cookies must be
-# marked Secure there. Override with MOVESENSE_SECURE_COOKIES=1 if you serve
-# the API behind HTTPS yourself.
-SECURE_COOKIES = ON_SERVERLESS or os.environ.get("MOVESENSE_SECURE_COOKIES") == "1"
+# Force Secure session cookies when the API is served over HTTPS behind a proxy
+# that does not forward ``X-Forwarded-Proto``. Normally the request scheme is
+# detected per request instead, so local HTTP development still works.
+SECURE_COOKIES = os.environ.get("MOVESENSE_SECURE_COOKIES") == "1"
 
 
 def _ensure_runtime_data() -> None:

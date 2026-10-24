@@ -238,13 +238,30 @@ class SignInRequest(BaseModel):
     remember: bool = True
 
 
-def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
+def _is_secure_request(request: Request) -> bool:
+    """Whether the browser reached us over HTTPS (Vercel sets X-Forwarded-Proto)."""
+    hostname = (request.url.hostname or "").lower()
+    if hostname in {"localhost", "127.0.0.1", "::1"}:
+        # ``vercel dev`` proxies over plain HTTP but still forwards an HTTPS
+        # proto header, so the host check must win for local development.
+        return False
+    if os.environ.get("VERCEL_ENV") in {"production", "preview"}:
+        return True
+    forwarded = request.headers.get("x-forwarded-proto", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip().lower() == "https"
+    return request.url.scheme == "https"
+
+
+def _set_session_cookie(
+    response: Response, request: Request, token: str, remember: bool
+) -> None:
     """HttpOnly cookie so the browser reports the signed-in user on every request.
 
     The frontend and API share one origin when deployed as a single Vercel
-    project, so the cookie is marked ``Secure`` there (TLS terminates at the
-    platform). Local HTTP development keeps ``secure=False``, otherwise the
-    browser would drop the cookie.
+    project, so the cookie is marked ``Secure`` there. Local HTTP development
+    (including ``vercel dev``) keeps ``secure=False``, otherwise the browser
+    would drop the cookie.
     """
     response.set_cookie(
         key=auth_mod.SESSION_COOKIE,
@@ -252,29 +269,29 @@ def _set_session_cookie(response: Response, token: str, remember: bool) -> None:
         max_age=auth_mod.REMEMBER_TTL_S if remember else None,
         httponly=True,
         samesite="lax",
-        secure=config.SECURE_COOKIES,
+        secure=config.SECURE_COOKIES or _is_secure_request(request),
         path="/",
     )
 
 
 @app.post("/api/auth/signup", status_code=201)
-def auth_signup(req: SignUpRequest, response: Response):
+def auth_signup(req: SignUpRequest, request: Request, response: Response):
     try:
         user = auth_mod.create_user(req.full_name, req.email, req.password)
     except auth_mod.AuthError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
     token = auth_mod.create_session(str(user["id"]), remember=True)
-    _set_session_cookie(response, token, remember=True)
+    _set_session_cookie(response, request, token, remember=True)
     return {"user": auth_mod.public_user(user)}
 
 
 @app.post("/api/auth/signin")
-def auth_signin(req: SignInRequest, response: Response):
+def auth_signin(req: SignInRequest, request: Request, response: Response):
     user = auth_mod.authenticate(req.email, req.password)
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid email or password.")
     token = auth_mod.create_session(str(user["id"]), remember=req.remember)
-    _set_session_cookie(response, token, remember=req.remember)
+    _set_session_cookie(response, request, token, remember=req.remember)
     return {"user": auth_mod.public_user(user)}
 
 
